@@ -1,0 +1,14 @@
+e:\Code c#\Voronoi\Voronoi\bin\Debug\net8.0\Voronoi.exe
+e:\Code c#\Voronoi\Voronoi\bin\Debug\net8.0\Voronoi.deps.json
+e:\Code c#\Voronoi\Voronoi\bin\Debug\net8.0\Voronoi.runtimeconfig.json
+e:\Code c#\Voronoi\Voronoi\bin\Debug\net8.0\Voronoi.dll
+e:\Code c#\Voronoi\Voronoi\bin\Debug\net8.0\Voronoi.pdb
+e:\Code c#\Voronoi\Voronoi\obj\Debug\net8.0\Voronoi.GeneratedMSBuildEditorConfig.editorconfig
+e:\Code c#\Voronoi\Voronoi\obj\Debug\net8.0\Voronoi.AssemblyInfoInputs.cache
+e:\Code c#\Voronoi\Voronoi\obj\Debug\net8.0\Voronoi.AssemblyInfo.cs
+e:\Code c#\Voronoi\Voronoi\obj\Debug\net8.0\Voronoi.csproj.CoreCompileInputs.cache
+e:\Code c#\Voronoi\Voronoi\obj\Debug\net8.0\Voronoi.dll
+e:\Code c#\Voronoi\Voronoi\obj\Debug\net8.0\refint\Voronoi.dll
+e:\Code c#\Voronoi\Voronoi\obj\Debug\net8.0\Voronoi.pdb
+e:\Code c#\Voronoi\Voronoi\obj\Debug\net8.0\Voronoi.genruntimeconfig.cache
+e:\Code c#\Voronoi\Voronoi\obj\Debug\net8.0\ref\Voronoi.dll
