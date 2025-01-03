@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Voronoi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b4dffc38941fee1c1c65aa51248c0a8e41c82ef6")]
 [assembly: System.Reflection.AssemblyProductAttribute("Voronoi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Voronoi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

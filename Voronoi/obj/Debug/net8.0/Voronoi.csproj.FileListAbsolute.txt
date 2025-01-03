@@ -12,3 +12,4 @@ e:\Code c#\Voronoi\Voronoi\obj\Debug\net8.0\refint\Voronoi.dll
 e:\Code c#\Voronoi\Voronoi\obj\Debug\net8.0\Voronoi.pdb
 e:\Code c#\Voronoi\Voronoi\obj\Debug\net8.0\Voronoi.genruntimeconfig.cache
 e:\Code c#\Voronoi\Voronoi\obj\Debug\net8.0\ref\Voronoi.dll
+e:\Code c#\Voronoi\Voronoi\obj\Debug\net8.0\Voronoi.sourcelink.json

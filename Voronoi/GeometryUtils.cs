@@ -14,13 +14,13 @@ namespace GeometryUtils
     /// </summary>
     public struct Point : IComparable<Point>
     {
-        public float X; // 点的X坐标
-        public float Y; // 点的Y坐标
+        public double X; // 点的X坐标
+        public double Y; // 点的Y坐标
 
         /// <summary>
         /// 使用指定的坐标初始化点。
         /// </summary>
-        public Point(float x, float y)
+        public Point(double x, double y)
         {
             X = x;
             Y = y;
@@ -61,7 +61,7 @@ namespace GeometryUtils
         /// </summary>
         /// <param name="point">目标点。</param>
         /// <returns>当前点到目标点的距离。</returns>
-        public float DistanceTo(Point point) => MathF.Sqrt((X - point.X) * (X - point.X) + (Y - point.Y) * (Y - point.Y));
+        public double DistanceTo(Point point) => Math.Sqrt((X - point.X) * (X - point.X) + (Y - point.Y) * (Y - point.Y));
 
 
 
@@ -142,13 +142,13 @@ namespace GeometryUtils
             Point nB = GetNormalVector(B.Start, B.End);
 
             // 计算投影距离
-            float b1nA = b1.X * nA.X + b1.Y * nA.Y;
-            float b2nA = b2.X * nA.X + b2.Y * nA.Y;
-            float anA = a1.X * nA.X + a1.Y * nA.Y;
+            double b1nA = b1.X * nA.X + b1.Y * nA.Y;
+            double b2nA = b2.X * nA.X + b2.Y * nA.Y;
+            double anA = a1.X * nA.X + a1.Y * nA.Y;
 
-            float a1nB = a1.X * nB.X + a1.Y * nB.Y;
-            float a2nB = a2.X * nB.X + a2.Y * nB.Y;
-            float bnB = b1.X * nB.X + b1.Y * nB.Y;
+            double a1nB = a1.X * nB.X + a1.Y * nB.Y;
+            double a2nB = a2.X * nB.X + a2.Y * nB.Y;
+            double bnB = b1.X * nB.X + b1.Y * nB.Y;
 
             // 检查线段是否不相交
             if ((b1nA - anA) * (b2nA - anA) >= 0 || (a1nB - bnB) * (a2nB - bnB) >= 0)
@@ -157,12 +157,12 @@ namespace GeometryUtils
             }
 
             // 计算交点
-            float denominator = nA.X * nB.Y - nA.Y * nB.X;
+            double denominator = nA.X * nB.Y - nA.Y * nB.X;
 
-            float fraction = (a1nB - bnB) / denominator;
+            double fraction = (a1nB - bnB) / denominator;
 
-            float x = a1.X + fraction * nA.Y;
-            float y = a1.Y - fraction * nA.X;
+            double x = a1.X + fraction * nA.Y;
+            double y = a1.Y - fraction * nA.X;
 
             return new Point(x, y);
         }
@@ -215,8 +215,8 @@ namespace GeometryUtils
 
             return false;
         }
-        public float CrossProduct(Point point) => CrossProduct(Start, End, point);
-        public static float CrossProduct(Point start, Point end, Point point) => (end.X - start.X) * (point.Y - start.Y) - (end.Y - start.Y) * (point.X - start.X);
+        public double CrossProduct(Point point) => CrossProduct(Start, End, point);
+        public static double CrossProduct(Point start, Point end, Point point) => (end.X - start.X) * (point.Y - start.Y) - (end.Y - start.Y) * (point.X - start.X);
     }
 
 
@@ -313,12 +313,12 @@ namespace GeometryUtils
         /// <returns>外心的坐标。</returns>
         public Point GetCircumcenter()
         {
-            float ax = Points[0].X, ay = Points[0].Y;
-            float bx = Points[1].X, by = Points[1].Y;
-            float cx = Points[2].X, cy = Points[2].Y;
-            float d = 2 * (ax * (by - cy) + bx * (cy - ay) + cx * (ay - by));
-            float ux = ((ax * ax + ay * ay) * (by - cy) + (bx * bx + by * by) * (cy - ay) + (cx * cx + cy * cy) * (ay - by)) / d;
-            float uy = ((ax * ax + ay * ay) * (cx - bx) + (bx * bx + by * by) * (ax - cx) + (cx * cx + cy * cy) * (bx - ax)) / d;
+            double ax = Points[0].X, ay = Points[0].Y;
+            double bx = Points[1].X, by = Points[1].Y;
+            double cx = Points[2].X, cy = Points[2].Y;
+            double d = 2 * (ax * (by - cy) + bx * (cy - ay) + cx * (ay - by));
+            double ux = ((ax * ax + ay * ay) * (by - cy) + (bx * bx + by * by) * (cy - ay) + (cx * cx + cy * cy) * (ay - by)) / d;
+            double uy = ((ax * ax + ay * ay) * (cx - bx) + (bx * bx + by * by) * (ax - cx) + (cx * cx + cy * cy) * (bx - ax)) / d;
 
             return new Point(ux, uy);
         }
@@ -333,12 +333,12 @@ namespace GeometryUtils
             Point B = Points[1];
             Point C = Points[2];
 
-            float a = B.DistanceTo(C);
-            float b = C.DistanceTo(A);
-            float c = A.DistanceTo(B);
+            double a = B.DistanceTo(C);
+            double b = C.DistanceTo(A);
+            double c = A.DistanceTo(B);
 
-            float x = (a * A.X + b * B.X + c * C.X) / (a + b + c);
-            float y = (a * A.Y + b * B.Y + c * C.Y) / (a + b + c);
+            double x = (a * A.X + b * B.X + c * C.X) / (a + b + c);
+            double y = (a * A.Y + b * B.Y + c * C.Y) / (a + b + c);
             return new Point(x, y);
         }
 
@@ -399,9 +399,9 @@ namespace GeometryUtils
             Point b = Points[1];
             Point c = Points[2];
 
-            float cross1 = (b.X - a.X) * (point.Y - a.Y) - (b.Y - a.Y) * (point.X - a.X);
-            float cross2 = (c.X - b.X) * (point.Y - b.Y) - (c.Y - b.Y) * (point.X - b.X);
-            float cross3 = (a.X - c.X) * (point.Y - c.Y) - (a.Y - c.Y) * (point.X - c.X);
+            double cross1 = (b.X - a.X) * (point.Y - a.Y) - (b.Y - a.Y) * (point.X - a.X);
+            double cross2 = (c.X - b.X) * (point.Y - b.Y) - (c.Y - b.Y) * (point.X - b.X);
+            double cross3 = (a.X - c.X) * (point.Y - c.Y) - (a.Y - c.Y) * (point.X - c.X);
 
             if (cross1 == 0 || cross2 == 0 || cross3 == 0)
             {
@@ -417,11 +417,11 @@ namespace GeometryUtils
             else
             {
                 Edge ab = new Edge(a, b);
-                float abp = point.DistanceTo(ab.GetMidpoint());
+                double abp = point.DistanceTo(ab.GetMidpoint());
                 Edge bc = new Edge(b, c);
-                float bcp = point.DistanceTo(bc.GetMidpoint());
+                double bcp = point.DistanceTo(bc.GetMidpoint());
                 Edge ca = new Edge(c, a);
-                float cap = point.DistanceTo(ca.GetMidpoint());
+                double cap = point.DistanceTo(ca.GetMidpoint());
 
                 if (abp < bcp && abp < cap) return (false, ab);
                 else if (bcp < abp && bcp < cap) return (false, bc);
@@ -464,23 +464,23 @@ namespace GeometryUtils
 
         public Point GetCentroid()
         {
-            
-            float A = 0;//面积
-            Point Centroid = new Point() ;
+
+            double A = 0;//面积
+            Point Centroid = new Point();
 
             int count = Points.Length;
-            for (int i = 0;i<count;i++)
+            for (int i = 0; i < count; i++)
             {
                 Point p1 = Points[i];
-                Point p2 = Points[(i+1)%count];
-                float CrossProduct = p1.X*p2.Y-p2.X*p1.Y;
-                A+=CrossProduct;
-                Centroid.X+=(p1.X+p2.X)*CrossProduct;
-                Centroid.Y+=(p1.Y+p2.Y)*CrossProduct;
+                Point p2 = Points[(i + 1) % count];
+                double CrossProduct = p1.X * p2.Y - p2.X * p1.Y;
+                A += CrossProduct;
+                Centroid.X += (p1.X + p2.X) * CrossProduct;
+                Centroid.Y += (p1.Y + p2.Y) * CrossProduct;
             }
-            A/=2;
-            Centroid.X/=(6*A);
-            Centroid.Y/=(6*A);
+            A /= 2;
+            Centroid.X /= (6 * A);
+            Centroid.Y /= (6 * A);
             return Centroid;
         }
     }
