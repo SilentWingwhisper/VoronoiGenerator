@@ -8,41 +8,38 @@ class Program
 {
     static void Main(string[] args)
     {
-        while (true)
+        int x = 0;
+        while (x < 100)
         {
 
 
             List<Point> points = new List<Point>();
 
-            Console.WriteLine("请输入生成列数");
-            float columns = int.Parse(Console.ReadLine());
-            Console.WriteLine("请输入生成排数");
 
-            float row = int.Parse(Console.ReadLine());
+            double num = 100000;
 
             Random random = new Random();
 
             Stopwatch stopwatch = Stopwatch.StartNew();
             stopwatch.Start();
 
-            float a = 500f / columns;
-            float b = 500f / row;
+            double a = 500f / Math.Sqrt(num);
+            double b = 500f / Math.Sqrt(num);
 
-            for (float i = 0; i < 500; i += a)
+            for (double i = 0; i < 500; i += a)
 
             {
-                for (float j = 0; j < 500; j += b)
+                for (double j = 0; j < 500; j += b)
                 {
-                    points.Add(new Point((float)random.NextDouble() % 500 + i, (float)random.NextDouble() % 500 + j));
+                    points.Add(new Point(random.NextDouble() % 500 + i, random.NextDouble() % 500 + j));
                 }
             }
             List<Triangle> triangles = Delaunay.GetDelaunayTriangles(points);
-            List<Point> points1 = new List<Point>() { new Point(0, 0), new Point(0, 500), new Point(500, 0), new Point(500, 500) };
-            Polygon polygon = new Polygon(points1);
-            List<Polygon> polygons = VoronoiGenerator.GenerateVoronoi(triangles, polygon);
-            stopwatch.Stop();
-            Console.WriteLine($"程序运行时间: {stopwatch.ElapsedMilliseconds} 毫秒");
 
+            List<Polygon> polygons = VoronoiGenerator.GenerateVoronoi(triangles, new Point(), new Point(500, 500));
+            stopwatch.Stop();
+            Console.WriteLine($"程序运行时间: {stopwatch.ElapsedMilliseconds} 毫秒,{x}次");
+            x++;
         }
     }
 }

@@ -11,7 +11,13 @@ public static class Delaunay
 	/// </summary>
 	private class Circumcircle
 	{
+		/// <summary>
+		/// 外心
+		/// </summary>
 		private Point Circumcenter;
+		/// <summary>
+		/// 半径
+		/// </summary>
 		private double Radius;
 
 		/// <summary>

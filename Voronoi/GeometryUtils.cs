@@ -45,7 +45,8 @@ namespace GeometryUtils
         public static bool operator >(Point left, Point right) => left.X > right.X || (left.X == right.X && left.Y > right.Y);
         public static bool operator <(Point left, Point right) => left.X < right.X || (left.X == right.X && left.Y < right.Y);
 
-        public override bool Equals(object obj) => obj is Point other && this == other;
+        public override string ToString() => "(" + X + "," + Y + ")";
+        public override readonly bool Equals(object obj) => obj is Point other && this == other;
         public override int GetHashCode() => HashCode.Combine(X, Y);
 
         public static Point operator +(Point left, Point right) => new Point(left.X + right.X, left.Y + right.Y);
@@ -113,8 +114,9 @@ namespace GeometryUtils
             (left.Start == right.End && left.End == right.Start);
 
         public static bool operator !=(Edge left, Edge right) => !(left == right);
-        public override bool Equals(object obj) => obj is Edge other && this == other;
-        public override int GetHashCode() => HashCode.Combine(Start.X, End.Y);
+        public override readonly bool Equals(object obj) => obj is Edge other && this == other;
+        public override int GetHashCode() => HashCode.Combine(Start.X, Start.Y) + HashCode.Combine(End.X, End.Y);
+        public override string ToString() => Start + "," + End;
 
         /// <summary>
         /// 计算当前线段与另一条线段的交点。
@@ -215,7 +217,21 @@ namespace GeometryUtils
 
             return false;
         }
+        /// <summary>
+        /// 计算由起点、终点和给定点组成的向量的叉积。
+        /// </summary>
+        /// <param name="point">参与计算叉积的点。</param>
+        /// <returns>返回起点、终点和给定点所形成的向量的叉积。</returns>
         public double CrossProduct(Point point) => CrossProduct(Start, End, point);
+
+        /// <summary>
+        /// 计算由指定起点、终点和给定点组成的向量的叉积。
+        /// 叉积用于计算两个向量之间的方向关系，返回值的符号可以表示该点相对于直线的方位。
+        /// </summary>
+        /// <param name="start">直线的起点。</param>
+        /// <param name="end">直线的终点。</param>
+        /// <param name="point">参与计算叉积的点。</param>
+        /// <returns>返回起点、终点和给定点所形成的向量的叉积。</returns>
         public static double CrossProduct(Point start, Point end, Point point) => (end.X - start.X) * (point.Y - start.Y) - (end.Y - start.Y) * (point.X - start.X);
     }
 
@@ -263,14 +279,33 @@ namespace GeometryUtils
             foreach (Point point in left.Points)
             {
                 if (!right.IsPointInVertex(point)) return false;
-
             }
             return true;
         }
 
-        public static bool operator !=(Triangle left, Triangle right)
+        public static bool operator !=(Triangle left, Triangle right) => !(left == right);
+
+        public override readonly bool Equals(object obj)
         {
-            return !(left == right);
+            if (obj == null || obj.GetType() != this.GetType())  // 如果传入的对象为空或者类型不一致
+                return false;
+
+            Triangle other = (Triangle)obj;  // 将对象转换为Triangle类型
+            foreach (Point point in this.Points)  // 遍历当前三角形的每个顶点
+            {
+                if (!other.IsPointInVertex(point))  // 如果在另一个三角形中没有找到该点
+                    return false;  // 返回不相等
+            }
+            return true;  // 如果所有点都相同，返回相等
+        }
+        public override int GetHashCode()
+        {
+            int hash = 17;  // 初始值为一个常数
+            foreach (Point point in this.Points)  // 遍历三角形的所有顶点
+            {
+                hash = hash * 31 + point.GetHashCode();  // 逐个点计算哈希值
+            }
+            return hash;  // 返回计算出的哈希值
         }
 
         /// <summary>
@@ -378,6 +413,12 @@ namespace GeometryUtils
             return edges;
         }
 
+        /// <summary>
+        /// 获取与指定边无关的顶点。
+        /// 该方法遍历所有顶点，返回不与指定边的起点或终点相同的第一个顶点。
+        /// </summary>
+        /// <param name="edge">用于判断无关顶点的边。</param>
+        /// <returns>返回一个与指定边无关的顶点。</returns>
         public Point GetUncorrelatedEdgeOfVertex(Edge edge)
         {
             Point point = new Point();
@@ -427,10 +468,7 @@ namespace GeometryUtils
                 else if (bcp < abp && bcp < cap) return (false, bc);
                 else return (false, ca);
             }
-
-
         }
-
     }
 
     public struct Polygon
@@ -462,7 +500,7 @@ namespace GeometryUtils
 
         }
 
-        public Point GetCentroid()
+        public readonly Point GetCentroid()
         {
 
             double A = 0;//面积
