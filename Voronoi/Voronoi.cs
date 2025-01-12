@@ -82,18 +82,18 @@ public static class VoronoiGenerator
         List<Polygon> polygons = new List<Polygon>();
 
 
-        // foreach (TriangularCluster triangularCluster in triangularClusters)
-        // {
-        //     Polygon? polygon;
-        //     if (triangularCluster.boolMarginalTriangle && triangularCluster.Triangles.Count > 0)
-        //     {
-        //         polygon = ProcessEdgeCluster(triangularCluster);
+        foreach (TriangularCluster triangularCluster in triangularClusters)
+        {
+            Polygon? polygon;
+            if (triangularCluster.boolMarginalTriangle && triangularCluster.Triangles.Count > 0)
+            {
+                polygon = ProcessEdgeCluster(triangularCluster);
 
-        //     }
-        //     else polygon = ProcessCenterCluster(triangularCluster);
-        //     if (polygon != null) polygons.Add((Polygon)polygon);
+            }
+            else polygon = ProcessCenterCluster(triangularCluster);
+            if (polygon != null) polygons.Add((Polygon)polygon);
 
-        // }
+        }
 
 
         return polygons;
@@ -231,9 +231,11 @@ public static class VoronoiGenerator
         List<Triangle> triangles = cluster.Triangles;
         int Count = triangles.Count;
 
+
         points.AddRange(ProcessEdgeWithBoundary(triangles[0], cluster.Center, cluster.StartEdge));
 
-        for (int i = 1; i < Count; i++)
+
+        for (int i = 1; i < Count ; i++)
         {
             Point circumcenter = triangles[i].GetCircumcenter();
             Point lastCircumcenter = triangles[i - 1].GetCircumcenter();
@@ -246,21 +248,9 @@ public static class VoronoiGenerator
         ps.Reverse();
         points.AddRange(ps);
 
-        if (Count == 1)
-        {
-            for (int i = 1; i < points.Count; i++)
-            {
-                if (points[i] == points[i - 1])
-                {
-                    points.RemoveAt(i);
-                    i--;
-                }
-            }
-        }
-
         if (points.Count == 0) return null;
 
-        points.AddRange(AddBoundaryCorners(points[0], points[1], points[points.Count - 1], cluster.Center));
+        points.AddRange(AddBoundaryCorners(points[points.Count - 1], points[points.Count - 2], points[0], cluster.Center));
         return new Polygon(points);
     }
 
@@ -407,7 +397,7 @@ public static class VoronoiGenerator
         double t, x, y;
 
         // 计算交点
-        
+
         if (direction.X != 0)
         {
 
@@ -499,7 +489,7 @@ public static class VoronoiGenerator
     {
         List<Point> points = new List<Point>();
         double mixX = MixPoint.X, mixY = MixPoint.Y, maxX = MaxPoint.X, maxY = MaxPoint.Y;
-        Point leftBottom = new Point(mixX, maxY), rightTop = new Point(maxY, mixY);
+        Point leftBottom = new Point(mixX, maxY), rightTop = new Point(maxX, mixY);
 
         if (ArePointsOnSameEdge(startP1, endP)) return points;
 
@@ -513,119 +503,108 @@ public static class VoronoiGenerator
             //叉乘法判断左上角方向在夹角内
             if (startDirection == mixDirection)
             {
-                points.Add(MixPoint);
-                if (endP.X == maxX)
-                {
-                    points.Add(rightTop);
-                }
+                if (startP1.Y != mixY) points.Add(MixPoint);
+
+                if (endP.X == maxX && endP != rightTop) points.Add(rightTop);
                 else if (endP.Y == maxY)
                 {
                     points.Add(rightTop);
-                    points.Add(MaxPoint);
+                    if (endP != MaxPoint) points.Add(MaxPoint);
                 }
 
             }
             else
             {
-                points.Add(leftBottom);
+                if (startP1 != leftBottom) points.Add(leftBottom);
 
-                if (endP.X == maxX)
-                {
-                    points.Add(MaxPoint);
-                }
+                if (endP.X == maxX && endP != MaxPoint) points.Add(MaxPoint);
                 else if (endP.X == mixX)
                 {
                     points.Add(MaxPoint);
-                    points.Add(rightTop);
+                    if (endP != rightTop) points.Add(rightTop);
                 }
             }
 
         }
         //起始点在上边上
-        if (startP1.Y == mixY)
+        else if (startP1.Y == mixY)
         {
             bool mixDirection = Edge.CrossProduct(MixPoint, startP1, centre) > 0;
             //叉乘法判断左上角在夹角内
             if (startDirection == mixDirection)
             {
-                points.Add(MixPoint);
-                if (endP.Y == mixY)
-                {
-                    points.Add(leftBottom);
-                }
+                if (startP1 != MixPoint) points.Add(MixPoint);
+                if (endP.Y == maxY && endP != leftBottom) points.Add(leftBottom);
                 else if (endP.X == maxX)
                 {
                     points.Add(leftBottom);
-                    points.Add(MaxPoint);
+                    if (endP != MaxPoint) points.Add(MaxPoint);
                 }
 
             }
             else
             {
-                points.Add(rightTop);
+                if (startP1 != rightTop) points.Add(rightTop);
 
-                if (endP.Y == maxY)
-                {
-                    points.Add(MaxPoint);
-                }
+                if (endP.Y == maxY && endP != MaxPoint) points.Add(MaxPoint);
                 else if (endP.X == mixX)
                 {
                     points.Add(MaxPoint);
-                    points.Add(rightTop);
+                    if (endP != rightTop) points.Add(rightTop);
                 }
             }
 
         }
         //起始点在右边上
-        if (startP1.X == maxX)
-        {
-            bool maxDirection = Edge.CrossProduct(MaxPoint, startP1, centre) > 0;
-//叉乘法判断右下角在夹角内
-            if (startDirection == maxDirection)
-            {
-                points.Add(MaxPoint);
-                if (endP.X == mixX) points.Add(leftBottom);
-                else if (endP.Y == mixY)
-                {
-                    points.Add(leftBottom);
-                    points.Add(MixPoint);
-                }
-            }
-            else
-            {
-                points.Add(rightTop);
-                if (endP.X == mixX) points.Add(MixPoint);
-                else if (endP.Y == maxY)
-                {
-                    points.Add(MixPoint);
-                    points.Add(leftBottom);
-                }
-            }
-        }
-        //起始点在下边上
-        if (startP1.Y == maxY)
+        else if (startP1.X == maxX)
         {
             bool maxDirection = Edge.CrossProduct(MaxPoint, startP1, centre) > 0;
             //叉乘法判断右下角在夹角内
             if (startDirection == maxDirection)
             {
-                points.Add(MaxPoint);
-                if (endP.Y == mixY) points.Add(rightTop);
-                else if (endP.X == mixX)
+                if (startP1 != MaxPoint) points.Add(MaxPoint);
+                if (endP.X == mixX && endP != leftBottom) points.Add(leftBottom);
+                else if (endP.Y == mixY)
                 {
-                    points.Add(rightTop);
-                    points.Add(MixPoint);
+                    points.Add(leftBottom);
+                    if (endP != MixPoint) points.Add(MixPoint);
                 }
             }
             else
             {
-                points.Add(leftBottom);
+                if (startP1 != rightTop) points.Add(rightTop);
+                if (endP.X == mixX && endP != MixPoint) points.Add(MixPoint);
+                else if (endP.Y == maxY)
+                {
+                    points.Add(MixPoint);
+                    if (endP != leftBottom) points.Add(leftBottom);
+                }
+            }
+        }
+        //起始点在下边上
+        else if (startP1.Y == maxY)
+        {
+            bool maxDirection = Edge.CrossProduct(MaxPoint, startP1, centre) > 0;
+            //叉乘法判断右下角在夹角内
+            if (startDirection == maxDirection)
+            {
+                if (startP1 != MaxPoint) points.Add(MaxPoint);
+                if (endP.Y == mixY && endP != rightTop) points.Add(rightTop);
+                else if (endP.X == mixX)
+                {
+                    points.Add(rightTop);
+                    if (endP != MixPoint) points.Add(MixPoint);
+                }
+            }
+            else
+            {
+                if (startP1 != leftBottom) points.Add(leftBottom);
 
-                if (endP.Y == mixY) points.Add(MixPoint);
+                if (endP.Y == mixY && endP != MixPoint) points.Add(MixPoint);
                 if (endP.X == maxX)
                 {
                     points.Add(MixPoint);
-                    points.Add(rightTop);
+                    if (endP != rightTop) points.Add(rightTop);
                 }
             }
 
@@ -651,5 +630,4 @@ public static class VoronoiGenerator
         return false;
     }
 }
-
 
